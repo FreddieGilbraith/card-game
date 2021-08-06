@@ -1,5 +1,5 @@
 import * as R from "ramda";
-import { makeAddress } from "../../../../../src/index.js";
+import { makeAddress } from "@little-bonsai/ingrates";
 
 import { register } from "./system";
 import createCampaignActorSystem from "../Campaign/system";

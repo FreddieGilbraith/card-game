@@ -1,38 +1,22 @@
-## Messages in Realizers
+# Persistance issues
 
-### First, we need to review the ordering in which realizers should be placed:
+There's three seperate lifecycles that need to be considered here:
 
-- RAM first: we would broardcast PUTs to all realizers, then run GETs going down the list. The first realizer that has the required state can return it. This would mean that the RAM realizer can essentially act as a cache for all lower realizers
-  - pros: simple, built in
-  - cons: no ability for realizers to manage the cache of infrequently access actors
-- RAM last: we would run sequential PUTS, waiting for one of the realizers to say that they've handle it, and boardcastt GETs to all realizers, letting the only one that contains the actor do its responding
-  - pros: single responsibility per realizers, fully controls cache
-  - cons: each individual realizer will be responsible for its own in memory cache
+- Engine: persisted only for the session, handles startup and shutdown and orchestration
+- Config: persisted between sessions, and used for all campaigns, should be pretty much a global data store
+- Campaign: multiple instances persisted, should be able to pretty seamlessly switch between them at runtime.
 
-### And that isn't even related to the question of storing messages in realizers.
+Each campaign should be persisted in a seperate siloed DB, and when one campaign is running, the other campaigns should have 0 (or minimal) load
 
-- must be cascade: we must gaurentee that a message is sent AT MOST ONCE
-- which side would they be persisted? before/after the transport? at send, at recieve
-- how should they be indexed? probably by the reciever, so they can be colocated in the same realizer
-- would create a heirarchy of pulling:
-  - we cant race the `pull` operation, as that could lead to underliverd messages
-  - we must fully drain the first realizer, then the next, and so on
-  - which means that messages to actors in higher realizers will be handled first
-    - is this a feature, rather than a bug...
+Two ways of handling this come to mind:
 
-## React Hooks
+- Seperate Actor Systems communicating with transports:
 
-We probably can't surface a simple `useActor(async function*(){})` hooks, as this doesn't provide a built in way to destroy the actor when the component unmounts.
-I instead think we're better off with something like this:
+  - Makes it easier to setup realizers: each system only has use 1 single realizer config each. Not sure how to switch up the realizer config to point to different DBs though
+  - There will be a lot of traffic flowing through transports, do I think that's going to be a problem?
 
-```javascript
-const [
-  addr,
-  state,
-  dispatch,
-] = useActorInterface((state, msg) => {});
-```
+- Single Actor System with diferentiated realizers:
+  - A much more complex single system
+  - The logic to switch realizers is probably more complex than the logic for routing transports
 
-The actor interface is a pure function that can update its internal state based on the messages it receives, `addr` is the id of this actor, and `dispatch` can dispatch to any address with `addr` as the `src`
-`useActorInterface` wraps this in a `async funciton*` that it manages, which it can exit when the component unmounts
-
+Ok, seperate actor systems seems to have won

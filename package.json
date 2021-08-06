@@ -1,56 +1,16 @@
 {
-	"name": "@little-bonsai/ingrates",
-	"version": "0.10.2",
-	"sideEffects": false,
-	"description": "An isomorphic actor system",
-	"homepage": "https://ingrates.littlebonsai.co.uk/",
-	"license": "MIT",
-	"author": "Freddie Gilbraith <freddie.gilbraith@littlebonsai.co.uk",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/FreddieGilbraith/ingrates.git"
-	},
-	"source": "src/index.js",
-	"main": "dist/index.js",
-	"module": "dist/index.module.js",
-	"unpkg": "dist/index.umd.js",
-	"exports": "./dist/index.modern.js",
-	"type": "module",
-	"files": [
-		"dist",
-		"src"
-	],
-	"keywords": [
-		"actor",
-		"actors",
-		"browser",
-		"node",
-		"isomorphic"
-	],
+	"name": "card-game",
+	"version": "1.0.0",
+	"description": "",
 	"scripts": {
-		"size": "size-limit",
-		"bench": "node --enable-source-maps benchmark.js",
-		"build": "microbundle",
-		"docs:build": "mkdirp docs/build && run-p docs:build:**",
-		"docs:build:css": "postcss docs/src/index.css -o docs/build/index.css",
-		"docs:build:pages": "./docs/src/build.js",
-		"docs:watch": "watch 'npm run docs:build' 'docs/src'",
-		"format": "prettier --write src/**/*",
-		"lint": "eslint . && prettier --check src/**/*",
-		"prepublishOnly": "npm run build && npm run size",
-		"prepushOnly": "npm run format && && npm run test && npm run build && npm run size",
-		"test": "NODE_ENV=test c8 --check-coverage --lines 100 --functions 100 --branches 100 --reporter=html --reporter=text ava",
-		"test:watch": "NODE_ENV=test ava --watch --fail-fast",
-		"watch": "microbundle watch"
-	},
-	"eslintConfig": {
-		"extends": "@little-bonsai"
+		"build": "parcel build src/index.html",
+		"start": "parcel serve src/index.html"
 	},
 	"prettier": {
+		"printWidth": 100,
 		"tabWidth": 4,
 		"trailingComma": "all",
 		"useTabs": true,
-		"printWidth": 100,
 		"overrides": [
 			{
 				"files": [
@@ -64,65 +24,36 @@
 			}
 		]
 	},
-	"babel": {
-		"presets": [
-			"@babel/preset-env"
-		]
-	},
-	"devDependencies": {
-		"@babel/cli": "^7.14.8",
-		"@babel/core": "^7.15.0",
-		"@babel/preset-env": "^7.15.0",
-		"@little-bonsai/eslint-config": "0.1.0",
-		"@size-limit/preset-small-lib": "^5.0.2",
-		"ava": "^3.15.0",
-		"babel-eslint": "^10.1.0",
-		"babel-jest": "^27.0.6",
-		"babel-polyfill": "^6.26.0",
-		"babel-preset-minify": "^0.5.1",
-		"c8": "^7.8.0",
-		"eslint": "^7.32.0",
-		"jest-cli": "^27.0.6",
-		"marked": "^2.1.3",
-		"microbundle": "0.13.0",
-		"mkdirp": "^1.0.4",
-		"npm-run-all": "^4.1.5",
-		"postcss": "^8.3.6",
-		"postcss-cli": "^8.3.1",
-		"prettier": "^2.3.2",
-		"ramda": "^0.27.1",
-		"size-limit": "^5.0.2",
-		"tailwindcss": "^2.2.7"
-	},
-	"ava": {
-		"files": [
-			"test/**/*.test.js"
-		],
-		"failWithoutAssertions": false,
-		"ignoredByWatcher": [
-			"build",
-			"coverage"
-		],
-		"verbose": true
-	},
-	"size-limit": [
-		{
-			"name": "modern",
-			"limit": "2 kB",
-			"path": "./dist/index.modern.js"
-		},
-		{
-			"name": "module",
-			"limit": "2.5 kB",
-			"path": "./dist/index.module.js"
-		},
-		{
-			"name": "archaic",
-			"limit": "2.5 kB",
-			"path": "./dist/index.js"
-		}
+	"author": "",
+	"license": "ISC",
+	"browserslist": [
+		"last 2 versions"
 	],
 	"dependencies": {
-		"nanoid": "^3.1.23"
+		"@babel/runtime": "^7.14.6",
+		"@little-bonsai/ingrates": "^0.10.2",
+		"@little-bonsai/ingrates-acquire-enhancer": "^0.1.2",
+		"@little-bonsai/ingrates-assert-enhancer": "^0.0.1",
+		"@little-bonsai/ingrates-log-enhancer": "^0.0.2",
+		"@little-bonsai/ingrates-query-enhancer": "^0.2.2",
+		"babel": "^6.23.0",
+		"babel-core": "^6.26.3",
+		"babel-polyfill": "^6.26.0",
+		"classnames": "^2.3.1",
+		"cn": "^0.1.1",
+		"iter-tools": "^7.1.3",
+		"nanoid": "^3.1.23",
+		"ramda": "^0.27.1",
+		"react": "^17.0.2",
+		"react-dom": "^17.0.2",
+		"react-router": "^5.2.0",
+		"react-router-dom": "^5.2.0"
+	},
+	"devDependencies": {
+		"autoprefixer": "^10.3.1",
+		"parcel": "^2.0.0-rc.0",
+		"parcel-bundler": "^1.12.5",
+		"prettier": "^2.3.2",
+		"tailwindcss": "^2.2.7"
 	}
 }

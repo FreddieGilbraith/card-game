@@ -1,8 +1,5 @@
-/lib
 node_modules
-coverage
+ingratesState
+.cache
 dist
-.npmrc
-docs/build
-.nyc_output
-example/card-game/.pijul
+.parcel-cache

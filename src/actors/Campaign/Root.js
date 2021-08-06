@@ -2,16 +2,27 @@ import * as R from "ramda";
 
 import { register } from "./system";
 
+import PartiesManager from "./PartiesManager";
+
 register(Root);
 
-export default function Root({ self, dispatch, msg, state, log }) {
-	log(msg);
-
+export default function Root({ acquire, self, dispatch, msg, state, log, children }) {
 	switch (msg.type) {
+		case "Start": {
+			break;
+		}
+
 		case "Mount": {
+			acquire.partiesManager(PartiesManager);
 			dispatch(self, { type: "UpdateTimestamp" });
 			break;
 		}
+
+		case "RequestRender":{
+			dispatch(children.partiesManager, msg);
+			dispatch(self, { type: "UpdateRender"});
+			break;
+			}
 
 		case "Ping": {
 			dispatch(msg.src, { type: "Pong" });
@@ -25,6 +36,12 @@ export default function Root({ self, dispatch, msg, state, log }) {
 
 		case "UpdateRender": {
 			dispatch("Engine:render", { path: ["campaign", "timestamp"], value: state.timestamp });
+			break;
+		}
+
+		case "CreateNewParty": {
+			log(children, msg);
+			// dispatch(children.partiesManager, msg);
 			break;
 		}
 

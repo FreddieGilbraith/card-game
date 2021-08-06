@@ -42,7 +42,6 @@ export default function Root(
 				dispatch("render", { path: ["engine", "addr"], value: self });
 				dispatch("render", { path: ["engine", "status"], value: "Running" });
 			} else {
-				log("CheckStartup", state.startup.waitingFor);
 			}
 
 			break;

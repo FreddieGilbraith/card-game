@@ -1,4 +1,5 @@
 import React from "react";
+import * as R from "ramda";
 
 import { Link } from "react-router-dom";
 
@@ -7,8 +8,8 @@ import { CampaignWrapper } from "./Wrapper";
 import Button from "./Button";
 
 function PartyListItem({ partyAddr, campaignAddr }) {
-	const partyInfo = useGameState((s) => s.party?.[partyAddr]);
 	const dispatch = useGameDispatch();
+	const partyInfo = useGameState((s) => s.campaign.party?.[partyAddr]);
 
 	React.useEffect(() => {
 		dispatch(partyAddr, { type: "RequestRender" });
@@ -27,14 +28,10 @@ function PartyListItem({ partyAddr, campaignAddr }) {
 	);
 }
 
-export default function CampaignPartyConfig({
-	match: {
-		params: { campaign: campaignAddr, partyAddr },
-	},
-}) {
-	const parties = useGameState((s) => s.campaign?.[campaignAddr]?.parties ?? []);
-	const campaignInfo = useGameState((s) => s.campaign?.[campaignAddr]);
+export default function CampaignPartyConfig() {
 	const dispatch = useGameDispatch();
+	const campaignAddr = useGameState(R.path(["campaign", "addr"]));
+	const parties = useGameState(R.pathOr([], ["campaign", "parties"]));
 
 	React.useEffect(() => {
 		dispatch(campaignAddr, { type: "RequestRender" });

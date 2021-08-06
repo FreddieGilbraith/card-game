@@ -34,6 +34,7 @@ function CampaignMounter({
 	const dispatch = useGameDispatch();
 
 	React.useEffect(() => {
+
 		if (engineAddr) {
 			dispatch(engineAddr, { type: "MountCampaign", campaign });
 		}
@@ -58,6 +59,7 @@ export default function Routes() {
 
 				<Route component={Loading} />
 			</Switch>
+
 			<Route path="/campaign/:campaign" component={CampaignMounter} />
 		</React.Fragment>
 	);

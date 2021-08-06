@@ -11,7 +11,8 @@ function Debug() {
 
 	React.useLayoutEffect(() => {
 		window.dispatch = dispatch;
-	}, [dispatch]);
+		window.state = state;
+	}, [state, dispatch]);
 
 	if (window.debug) {
 		return <div style={{ whiteSpace: "pre" }}>{JSON.stringify(state, null, 2)}</div>;

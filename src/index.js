@@ -10,7 +10,7 @@ import App from "./components/App";
 ("min-h-full");
 
 function main() {
-	console.log({ style });
+	console.log("main()");
 
 	let state = {};
 

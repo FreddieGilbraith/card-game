@@ -1,3 +1,8 @@
+## Routing
+
+The routing is all very well and good, but namespaced addrs don't path-ify very well.
+Perhaps it's time to look into a more react state based solution for pages, that would also make navigations more interceptable. The only downside is the great obvervability of paths, but I fear that this is such a stateful app that they're less useful than they'd otherwise be
+
 # Persistance issues
 
 There's three seperate lifecycles that need to be considered here:

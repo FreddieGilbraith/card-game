@@ -53,7 +53,6 @@ export default function Button({ color, move, as = "button", className, onClick,
 				"rounded",
 				"shadow",
 				"text-3xl",
-				"text-white",
 				"cursor-pointer",
 
 				"transition-all",
@@ -77,11 +76,16 @@ export default function Button({ color, move, as = "button", className, onClick,
 						move === "wild",
 				},
 				{
-					"bg-green-700 border-green-800 focus:bg-green-600 focus:text-green-100 focus:border-green-500 hover:bg-green-600 hover:text-green-100 hover:border-green-500":
+					"text-black bg-white border-grey-800 focus:bg-grey-600 focus:text-grey-100 focus:border-grey-500 hover:bg-grey-600 hover:text-grey-100 hover:border-grey-500":
+						color === "white",
+
+					"text-white bg-green-700 border-green-800 focus:bg-green-600 focus:text-green-100 focus:border-green-500 hover:bg-green-600 hover:text-green-100 hover:border-green-500":
 						color === "green",
-					"bg-blue-700 border-blue-800 focus:bg-blue-600 focus:text-blue-100 focus:border-blue-500 hover:bg-blue-600 hover:text-blue-100 hover:border-blue-500":
+
+					"text-white bg-blue-700 border-blue-800 focus:bg-blue-600 focus:text-blue-100 focus:border-blue-500 hover:bg-blue-600 hover:text-blue-100 hover:border-blue-500":
 						color === "blue",
-					"bg-red-700 border-red-800 focus:bg-red-600 focus:text-red-100 focus:border-red-500 hover:bg-red-600 hover:text-red-100 hover:border-red-500":
+
+					"text-white bg-red-700 border-red-800 focus:bg-red-600 focus:text-red-100 focus:border-red-500 hover:bg-red-600 hover:text-red-100 hover:border-red-500":
 						color === "red",
 				},
 			)}

@@ -42,15 +42,10 @@ export default function Routes() {
 	return (
 		<React.Fragment>
 			<Switch>
-				<Route
-					path="/campaign/:campaign/config/party/:partyAddr?"
-					component={CampaignPartyConfig}
-				/>
-
-				<Route path="/campaign/:campaign/skirmish" component={Noop} />
 				<Route path="/campaign-dashboard" component={CampaignDashboard} />
-				<Route path="/select-campaign" component={SelectCampaign} />
+				<Route path="/party-config" component={CampaignPartyConfig} />
 				<Route path="/playground" component={Playground} />
+				<Route path="/select-campaign" component={SelectCampaign} />
 
 				<Route component={Loading} />
 			</Switch>

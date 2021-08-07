@@ -8,6 +8,10 @@ register(PartiesManager);
 
 export default function PartiesManager({ children, log, msg, self, state, dispatch, spawn }) {
 	switch (msg.type) {
+		case "Mount": {
+			return R.over(R.lensProp("parties"), R.defaultTo([]));
+		}
+
 		case "RequestRender": {
 			(children.parties ?? []).map((addr) => dispatch(addr, msg));
 			dispatch(self, { type: "RenderPartiesList" });

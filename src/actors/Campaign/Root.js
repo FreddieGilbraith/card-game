@@ -18,11 +18,11 @@ export default function Root({ acquire, self, dispatch, msg, state, log, childre
 			break;
 		}
 
-		case "RequestRender":{
+		case "RequestRender": {
 			dispatch(children.partiesManager, msg);
-			dispatch(self, { type: "UpdateRender"});
+			dispatch(self, { type: "UpdateRender" });
 			break;
-			}
+		}
 
 		case "Ping": {
 			dispatch(msg.src, { type: "Pong" });
@@ -40,8 +40,7 @@ export default function Root({ acquire, self, dispatch, msg, state, log, childre
 		}
 
 		case "CreateNewParty": {
-			log(children, msg);
-			// dispatch(children.partiesManager, msg);
+			dispatch(children.partiesManager, msg);
 			break;
 		}
 

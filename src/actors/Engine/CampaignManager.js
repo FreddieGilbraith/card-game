@@ -31,7 +31,10 @@ export default async function CampaignManager(
 			const { currentCampaign } = await query(state.configAddr, {
 				type: "RequestCurrentCampaign",
 			});
+
 			dispatch(self, { type: "MountCampaign", campaign: currentCampaign });
+
+			break;
 		}
 
 		case "RenderCampaignsList": {

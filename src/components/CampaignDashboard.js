@@ -6,11 +6,7 @@ import { useGameDispatch, useGameState } from "./useGameState";
 import { CampaignWrapper } from "./Wrapper";
 import Button from "./Button";
 
-export default function CampaignDashboard({
-	match: {
-		params: { campaign },
-	},
-}) {
+export default function CampaignDashboard() {
 	const campaignAddr = useGameState((s) => s.campaign?.addr);
 	const dispatch = useGameDispatch();
 
@@ -25,12 +21,7 @@ export default function CampaignDashboard({
 
 				<div className="flex-1 flex flex-col ">
 					<div className="flex-1 flex flex-col items-center justify-center">
-						<Button
-							move="wild"
-							color="blue"
-							as={Link}
-							to={`/campaign/${campaign}/config/party`}
-						>
+						<Button move="wild" color="blue" as={Link} to={"/party-config"}>
 							Parties
 						</Button>
 					</div>

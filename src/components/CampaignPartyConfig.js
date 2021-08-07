@@ -1,13 +1,13 @@
 import React from "react";
 import * as R from "ramda";
-
 import { Link } from "react-router-dom";
 
-import { useGameDispatch, useGameState } from "./useGameState";
-import { CampaignWrapper } from "./Wrapper";
 import Button from "./Button";
+import PartyDashboard from "./PartyDashboard";
+import { CampaignWrapper } from "./Wrapper";
+import { useGameDispatch, useGameState } from "./useGameState";
 
-function PartyListItem({ partyAddr, campaignAddr }) {
+function PartyListItem({ partyAddr, onClick }) {
 	const dispatch = useGameDispatch();
 	const partyInfo = useGameState((s) => s.campaign.party?.[partyAddr]);
 
@@ -17,25 +17,17 @@ function PartyListItem({ partyAddr, campaignAddr }) {
 
 	return (
 		<div className="p-2">
-			<Link
-				data-keyboard-focusable
-				className="p-2 border-2 border-black shadow rounded block"
-				to={`/campaign/${campaignAddr}/config/party/${partyAddr}`}
-			>
+			<Button color="white" move="wild" onClick={onClick}>
 				<h3 className="text-lg border-b-2 border-black">{partyInfo?.name}</h3>
-			</Link>
+			</Button>
 		</div>
 	);
 }
 
-export default function CampaignPartyConfig() {
+function PartyList({ setFocusedParty }) {
 	const dispatch = useGameDispatch();
 	const campaignAddr = useGameState(R.path(["campaign", "addr"]));
 	const parties = useGameState(R.pathOr([], ["campaign", "parties"]));
-
-	React.useEffect(() => {
-		dispatch(campaignAddr, { type: "RequestRender" });
-	}, [dispatch, campaignAddr]);
 
 	return (
 		<CampaignWrapper>
@@ -44,7 +36,10 @@ export default function CampaignPartyConfig() {
 			<ol className="p-2">
 				{parties.map((partyAddr) => (
 					<li key={partyAddr}>
-						<PartyListItem partyAddr={partyAddr} campaignAddr={campaignAddr} />
+						<PartyListItem
+							partyAddr={partyAddr}
+							onClick={setFocusedParty.bind(null, partyAddr)}
+						/>
 					</li>
 				))}
 			</ol>
@@ -65,4 +60,20 @@ export default function CampaignPartyConfig() {
 			</Button>
 		</CampaignWrapper>
 	);
+}
+
+export default function CampaignPartyConfig() {
+	const dispatch = useGameDispatch();
+	const campaignAddr = useGameState(R.path(["campaign", "addr"]));
+	const [focusedParty, setFocusedParty] = React.useState(null);
+
+	React.useEffect(() => {
+		dispatch(campaignAddr, { type: "RequestRender" });
+	}, [dispatch, campaignAddr]);
+
+	if (focusedParty) {
+		return <PartyDashboard party={focusedParty} />;
+	} else {
+		return <PartyList setFocusedParty={setFocusedParty} />;
+	}
 }

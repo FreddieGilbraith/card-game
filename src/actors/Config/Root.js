@@ -17,7 +17,9 @@ export default function Root({ acquire, children, spawn, log, msg, dispatch }) {
 		}
 
 		case "AddKnownCampaign":
-		case "RequestKnownCampaigns": {
+		case "RequestCurrentCampaign":
+		case "RequestKnownCampaigns":
+		case "SetCurrentCampaign": {
 			dispatch(children.knownCampaigns, msg);
 			break;
 		}

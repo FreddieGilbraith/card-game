@@ -27,12 +27,17 @@ export default async function CampaignManager(
 			return R.assoc("configAddr", msg.configAddr);
 		}
 
+		case "ResumeCurrentCampaign": {
+			const { currentCampaign } = await query(state.configAddr, {
+				type: "RequestCurrentCampaign",
+			});
+			dispatch(self, { type: "MountCampaign", campaign: currentCampaign });
+		}
+
 		case "RenderCampaignsList": {
 			const { knownCampaigns } = await query(state.configAddr, {
 				type: "RequestKnownCampaigns",
 			});
-
-			log({ knownCampaigns });
 
 			dispatch("render", {
 				path: ["engine", "campaigns"],
@@ -56,7 +61,8 @@ export default async function CampaignManager(
 			if (state && state.campaignSystems && state.campaignSystems[msg.campaign]) {
 				break;
 			}
-			const campaignDb = await createNamedRealizerIdb(`Campaign:${newCampaignId}`);
+
+			const campaignDb = await createNamedRealizerIdb(`Campaign:${msg.campaign}`);
 			const campaignActorSystem = await createCampaignActorSystem(
 				campaignDb,
 				msg.campaign,
@@ -65,6 +71,7 @@ export default async function CampaignManager(
 
 			const campaignRootAddr = await bootCampaignActorSystem(campaignDb, campaignActorSystem);
 
+			dispatch(state.configAddr, { type: "SetCurrentCampaign", id: msg.campaign });
 			dispatch("render", { path: ["campaign"], value: { addr: campaignRootAddr } });
 
 			return R.pipe(

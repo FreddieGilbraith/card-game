@@ -56,6 +56,7 @@ export default function Root(
 		}
 
 		case "CreateNewCampaign":
+		case "ResumeCurrentCampaign":
 		case "MountCampaign":
 		case "RenderCampaignsList": {
 			dispatch(children.campaignManager, msg);

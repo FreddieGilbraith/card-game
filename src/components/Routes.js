@@ -14,7 +14,7 @@ function Loading() {
 
 	React.useEffect(() => {
 		if (engineStatus === "Running") {
-			history.push("/campaign");
+			history.push("/select-campaign");
 		}
 	}, [history, engineStatus]);
 
@@ -25,20 +25,15 @@ function Noop() {
 	return null;
 }
 
-function CampaignMounter({
-	match: {
-		params: { campaign },
-	},
-}) {
+function CampaignResumer() {
 	const engineAddr = useGameState((s) => s.engine.addr);
 	const dispatch = useGameDispatch();
 
 	React.useEffect(() => {
-
 		if (engineAddr) {
-			dispatch(engineAddr, { type: "MountCampaign", campaign });
+			dispatch(engineAddr, { type: "ResumeCurrentCampaign" });
 		}
-	}, [dispatch, engineAddr, campaign]);
+	}, [dispatch, engineAddr]);
 
 	return null;
 }
@@ -53,14 +48,14 @@ export default function Routes() {
 				/>
 
 				<Route path="/campaign/:campaign/skirmish" component={Noop} />
-				<Route path="/campaign/:campaign" component={CampaignDashboard} />
-				<Route path="/campaign" component={SelectCampaign} />
+				<Route path="/campaign-dashboard" component={CampaignDashboard} />
+				<Route path="/select-campaign" component={SelectCampaign} />
 				<Route path="/playground" component={Playground} />
 
 				<Route component={Loading} />
 			</Switch>
 
-			<Route path="/campaign/:campaign" component={CampaignMounter} />
+			<CampaignResumer />
 		</React.Fragment>
 	);
 }

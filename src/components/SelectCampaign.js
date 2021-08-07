@@ -30,7 +30,13 @@ export default function SelectCampaign() {
 								className="font-mono"
 								color="blue"
 								move="down"
-								to={`/campaign/${campaignAddr}`}
+								to={"/campaign-dashboard"}
+								onClick={() => {
+									dispatch.bind(null, engineAddr, {
+										type: "MountCampaign",
+										campaign: campaignAddr,
+									})();
+								}}
 							>
 								{campaignAddr}
 							</Button>

@@ -30,12 +30,12 @@
 		"last 2 versions"
 	],
 	"dependencies": {
-		"@babel/runtime": "^7.14.6",
+		"@babel/runtime": "^7.14.8",
 		"@little-bonsai/ingrates": "^0.10.2",
 		"@little-bonsai/ingrates-acquire-enhancer": "^0.1.2",
 		"@little-bonsai/ingrates-assert-enhancer": "^0.0.1",
 		"@little-bonsai/ingrates-log-enhancer": "^0.0.2",
-		"@little-bonsai/ingrates-query-enhancer": "^0.2.2",
+		"@little-bonsai/ingrates-query-enhancer": "^0.3.0",
 		"babel": "^6.23.0",
 		"babel-core": "^6.26.3",
 		"babel-polyfill": "^6.26.0",

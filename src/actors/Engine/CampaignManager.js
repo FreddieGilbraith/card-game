@@ -4,69 +4,35 @@ import { makeAddress } from "@little-bonsai/ingrates";
 import { register } from "./system";
 import createCampaignActorSystem from "../Campaign/system";
 import bootCampaignActorSystem from "../Campaign/boot";
+import createNamedRealizerIdb from "../../actorSystemTools/createNamedRealizerIdb";
 
 register(CampaignManager);
 
-async function getKnownCampaignsDb() {
-	const openDbRequest = indexedDB.open("knownCampaigns", 1);
-
-	const db = await new Promise((done) => {
-		openDbRequest.onsuccess = () => {
-			done(openDbRequest.result);
-		};
-
-		openDbRequest.onupgradeneeded = ({ target: { result: db } }) => {
-			db.createObjectStore("knownCampaigns", { keyPath: "id" });
-		};
-	});
-
-	return db;
-}
-
-async function getSpecificCampaignDb(id) {
-	const openDbRequest = indexedDB.open(`Campaign:${id}`, 1);
-
-	const db = await new Promise((done) => {
-		openDbRequest.onsuccess = () => {
-			done(openDbRequest.result);
-		};
-
-		openDbRequest.onupgradeneeded = ({ target: { result: db } }) => {
-			const objectStore = db.createObjectStore("actorBundles", { keyPath: "self" });
-			objectStore.createIndex("name", "name");
-			objectStore.createIndex("nickname", "nickname");
-			objectStore.createIndex("parent", "parent");
-			objectStore.createIndex("self", "self");
-		};
-	});
-
-	return db;
-}
-
 export default async function CampaignManager(
-	{ state, self, parent, msg, log, dispatch },
+	{ state, self, parent, msg, log, dispatch, query },
 	createDynamicSystemTransport,
 ) {
 	switch (msg.type) {
+		case "Mount": {
+			dispatch(parent, { type: "RequestConfigAddr" });
+			break;
+		}
+
 		case "IntroEngine": {
 			dispatch(parent, { type: "ConfirmStartup" });
 			break;
 		}
 
+		case "RespondConfigAddr": {
+			return R.assoc("configAddr", msg.configAddr);
+		}
+
 		case "RenderCampaignsList": {
-			const knownCampaignsDb = await getKnownCampaignsDb();
-
-			const knownCampaigns = await new Promise((done, fail) => {
-				const transaction = knownCampaignsDb.transaction(["knownCampaigns"], "readwrite");
-				transaction.onerror = fail;
-
-				const request = transaction.objectStore("knownCampaigns").getAll();
-
-				request.onsuccess = () => {
-					done(request.result);
-				};
-				request.onerror = fail;
+			const { knownCampaigns } = await query(state.configAddr, {
+				type: "RequestKnownCampaigns",
 			});
+
+			log({ knownCampaigns });
 
 			dispatch("render", {
 				path: ["engine", "campaigns"],
@@ -77,23 +43,10 @@ export default async function CampaignManager(
 		}
 
 		case "CreateNewCampaign": {
-			const knownCampaignsDb = await getKnownCampaignsDb();
-
 			const newCampaignId = makeAddress();
-			await getSpecificCampaignDb(newCampaignId);
+			await createNamedRealizerIdb(`Campaign:${newCampaignId}`);
 
-			await new Promise((done, fail) => {
-				const transaction = knownCampaignsDb.transaction(["knownCampaigns"], "readwrite");
-				transaction.onerror = fail;
-
-				const request = transaction
-					.objectStore("knownCampaigns")
-					.put({ id: newCampaignId });
-
-				request.onsuccess = done;
-				request.onerror = fail;
-			});
-
+			dispatch(state.configAddr, { type: "AddKnownCampaign", newCampaignId });
 			dispatch(self, { type: "RenderCampaignsList" });
 
 			break;
@@ -103,7 +56,7 @@ export default async function CampaignManager(
 			if (state && state.campaignSystems && state.campaignSystems[msg.campaign]) {
 				break;
 			}
-			const campaignDb = await getSpecificCampaignDb(msg.campaign);
+			const campaignDb = await createNamedRealizerIdb(`Campaign:${newCampaignId}`);
 			const campaignActorSystem = await createCampaignActorSystem(
 				campaignDb,
 				msg.campaign,

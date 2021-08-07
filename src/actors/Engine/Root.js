@@ -26,13 +26,21 @@ export default function Root(
 
 			return R.pipe(
 				R.assocPath(["startup", "waitingFor", configAddr], "configRoot"),
+
 				R.assocPath(["startup", "waitingFor", renderAddr], "renderGraph"),
+
 				R.assocPath(["startup", "waitingFor", campaignManagerAddr], "campaignManager"),
 			);
 		}
 
+		case "RequestConfigAddr": {
+			dispatch(msg.src, { type: "RespondConfigAddr", configAddr });
+			break;
+		}
+
 		case "ConfirmStartup": {
 			dispatch(self, { type: "CheckStartup" });
+
 			return R.dissocPath(["startup", "waitingFor", msg.src]);
 		}
 
